@@ -5,20 +5,24 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/hanma-kun/GoHashBrowns/cryptoutils/dnsres"
 	"github.com/hanma-kun/GoHashBrowns/cryptoutils/encoding"
 	"github.com/hanma-kun/GoHashBrowns/cryptoutils/hashing"
-	"github.com/hanma-kun/GoHashBrowns/cryptoutils/dnsres"
-	"github.com/hanma-kun/GoHashBrowns/cryptoutils/password"
 	"github.com/hanma-kun/GoHashBrowns/cryptoutils/random"
+	"github.com/hanma-kun/GoHashBrowns/forensics/mimetype"
+	"github.com/hanma-kun/GoHashBrowns/forensics/portscanner"
 )
 
 func main() {
+	menu()
 	fmt.Println("Select an option:")
 	fmt.Println("1. Generate SHA-256 hash")
 	fmt.Println("2. Perform Base64 encoding/decoding")
 	fmt.Println("3. Generate secure random number")
-	fmt.Println("4. Brute force password cracker")
-	fmt.Println("5. Resolve domain to IP addresses")
+	fmt.Println("4. Resolve domain to IP addresses")
+	fmt.Println("5. Find MIME Type")
+	fmt.Println("6. Port Scan")
 
 	reader := bufio.NewReader(os.Stdin)
 	option, _ := reader.ReadString('\n')
@@ -69,19 +73,6 @@ func main() {
 		fmt.Println("Secure random number:", randomNumber)
 
 	case "4":
-		fmt.Print("Enter the password to crack: ")
-		userPassword, _ := reader.ReadString('\n')
-		userPassword = strings.TrimSpace(userPassword)
-		maxLength := 6 // You can adjust the maximum length as needed
-
-		found := password.BruteForce(userPassword, maxLength)
-		if found == "" {
-			fmt.Println("Password not found!")
-		} else {
-			fmt.Println("Password found:", found)
-		}
-
-	case "5":
 		fmt.Print("Enter the domain to resolve: ")
 		domain, _ := reader.ReadString('\n')
 		domain = strings.TrimSpace(domain)
@@ -97,7 +88,55 @@ func main() {
 			fmt.Println(ip)
 		}
 
+	case "5":
+		fmt.Print("Enter the file path: ")
+		filePath, _ := reader.ReadString('\n')
+		filePath = strings.TrimSpace(filePath)
+
+		// Open the file
+		file, err := os.Open(filePath)
+		if err != nil {
+			fmt.Println("Error opening file:", err)
+			return
+		}
+		defer file.Close()
+
+		// Read the file contents
+		fileContents := make([]byte, 512) // Read the first 512 bytes for magic bytes detection
+		_, err = file.Read(fileContents)
+		if err != nil {
+			fmt.Println("Error reading file:", err)
+			return
+		}
+
+		mimeType, err := mimetype.GuessMIMEType(fileContents)
+		if err != nil {
+			fmt.Println("Error guessing MIME type:", err)
+			return
+		}
+
+		fmt.Println("Guessed MIME type:", mimeType)
+
+	case "6":
+		portscanner.PortScan()
+
 	default:
 		fmt.Println("Invalid option.")
+
 	}
+}
+
+func menu() {
+	mnu := `
+	 ####     ####             ##  ##     ##      ####    ##  ##            #####    #####     ####    ##   ##  ##  ##    ####   
+	##  ##   ##  ##            ##  ##    ####    ##  ##   ##  ##            ##  ##   ##  ##   ##  ##   ##   ##  ### ##   ##  ##  
+	##       ##  ##            ##  ##   ##  ##   ##       ##  ##            ##  ##   ##  ##   ##  ##   ##   ##  ######   ##      
+	## ###   ##  ##            ######   ######    ####    ######            #####    #####    ##  ##   ## # ##  ######    ####   
+	##  ##   ##  ##            ##  ##   ##  ##       ##   ##  ##            ##  ##   ####     ##  ##   #######  ## ###       ##  
+	##  ##   ##  ##            ##  ##   ##  ##   ##  ##   ##  ##            ##  ##   ## ##    ##  ##   ### ###  ##  ##   ##  ##  
+	 ####     ####             ##  ##   ##  ##    ####    ##  ##            #####    ##  ##    ####    ##   ##  ##  ##    ####   
+			                                                                                       
+ 													             [Cybersecurity Utility Tool, hanma-kun] 
+	`
+	fmt.Println(mnu)
 }
