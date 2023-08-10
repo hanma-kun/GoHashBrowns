@@ -1,6 +1,6 @@
 # GoHashBrowns
 
-GoHashBrowns is a command-line tool that offers a variety of cryptographic and networking functionalities using Go programming language. It provides a user-friendly interface to perform tasks such as generating hash values, performing Base64 encoding and decoding, generating secure random numbers, cracking passwords using brute force, and resolving domain names to IP addresses.
+GoHashBrowns is a command-line tool that offers a variety of cryptographic and networking functionalities using the Go programming language. It provides a user-friendly interface to perform tasks such as generating hash values, performing Base64 encoding and decoding, generating secure random numbers, cracking passwords using brute force, and resolving domain names to IP addresses.
 
 ## Features
 
@@ -69,7 +69,4 @@ Contributions are welcome! Feel free to open issues or submit pull requests for 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
 ---
-
-Feel free to customize this README file according to your preferences and the specifics of your project. Make sure to replace placeholders like `hanma-kun` with your actual GitHub username and provide accurate information about your project.
