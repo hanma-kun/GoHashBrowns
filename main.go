@@ -12,6 +12,7 @@ import (
 	"github.com/hanma-kun/GoHashBrowns/cryptoutils/random"
 	"github.com/hanma-kun/GoHashBrowns/forensics/mimetype"
 	"github.com/hanma-kun/GoHashBrowns/forensics/portscanner"
+	"github.com/hanma-kun/GoHashBrowns/forensics/subdomain"
 )
 
 func main() {
@@ -23,6 +24,7 @@ func main() {
 	fmt.Println("4. Resolve domain to IP addresses")
 	fmt.Println("5. Find MIME Type")
 	fmt.Println("6. Port Scan")
+	fmt.Println("7. Subdomain Enumeration")
 
 	reader := bufio.NewReader(os.Stdin)
 	option, _ := reader.ReadString('\n')
@@ -119,6 +121,17 @@ func main() {
 
 	case "6":
 		portscanner.PortScan()
+
+	case "7":
+		fmt.Print("Enter the domain to enumerate subdomains: ")
+		domain, _ := reader.ReadString('\n')
+		domain = strings.TrimSpace(domain)
+
+		fmt.Print("Enter the path to the wordlist: ")
+		wordlistPath, _ := reader.ReadString('\n')
+		wordlistPath = strings.TrimSpace(wordlistPath)
+
+		subdomain.EnumerateSubdomains(domain, wordlistPath) 
 
 	default:
 		fmt.Println("Invalid option.")
