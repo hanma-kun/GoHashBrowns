@@ -13,6 +13,7 @@ import (
 	"github.com/hanma-kun/GoHashBrowns/forensics/mimetype"
 	"github.com/hanma-kun/GoHashBrowns/forensics/portscanner"
 	"github.com/hanma-kun/GoHashBrowns/forensics/subdomain"
+	"github.com/hanma-kun/GoHashBrowns/forensics/webtech"
 )
 
 func main() {
@@ -25,6 +26,7 @@ func main() {
 	fmt.Println("5. Find MIME Type")
 	fmt.Println("6. Port Scan")
 	fmt.Println("7. Subdomain Enumeration")
+	fmt.Println("8. Identify Web Technology")
 
 	reader := bufio.NewReader(os.Stdin)
 	option, _ := reader.ReadString('\n')
@@ -131,7 +133,23 @@ func main() {
 		wordlistPath, _ := reader.ReadString('\n')
 		wordlistPath = strings.TrimSpace(wordlistPath)
 
-		subdomain.EnumerateSubdomains(domain, wordlistPath) 
+		subdomain.EnumerateSubdomains(domain, wordlistPath)
+
+	case "8":
+		fmt.Print("Enter the target URL for web technology identification: ")
+		targetURL, _ := reader.ReadString('\n')
+		targetURL = strings.TrimSpace(targetURL)
+
+		technologies, err := webtech.IdentifyTechnologies(targetURL)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+
+		fmt.Println("Identified web technologies:")
+		for tech, version := range technologies {
+			fmt.Printf("%s: %s\n", tech, version)
+		}
 
 	default:
 		fmt.Println("Invalid option.")
